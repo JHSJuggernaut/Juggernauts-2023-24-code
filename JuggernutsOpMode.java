@@ -90,11 +90,11 @@ public class JuggernutsOpMode extends LinearOpMode {
             }
             //pully
             //pully up
-            if(gamepad2.dpad_up) {
+            if(gamepad1.dpad_up) {
                 liftOne.setPower(1);
                 liftTwo.setPower(-0.975);
             }
-            else if(gamepad2.dpad_up && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
+            else if(gamepad1.dpad_up && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
                 liftOne.setPower(-1);
                 liftTwo.setPower(0.975);
             }
@@ -103,11 +103,11 @@ public class JuggernutsOpMode extends LinearOpMode {
                 liftTwo.setPower(0);
             }
             //pully down
-            if(gamepad2.dpad_down) {
+            if(gamepad1.dpad_down) {
                 liftOne.setPower(-1);
                 liftTwo.setPower(1);
             }
-            else if(gamepad2.dpad_down && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
+            else if(gamepad1.dpad_down && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
                 liftOne.setPower(1);
                 liftTwo.setPower(-1);
             }
@@ -116,7 +116,7 @@ public class JuggernutsOpMode extends LinearOpMode {
                 liftTwo.setPower(0);
             }
             //plane
-            if(gamepad2.right_bumper){
+            if(gamepad1.right_bumper){
                 PlaneLauncher.setPower(1);
             }
             else {
@@ -124,14 +124,14 @@ public class JuggernutsOpMode extends LinearOpMode {
             }
             //Intake
             //intake out
-            if(gamepad2.dpad_left){
+            if(gamepad1.dpad_left){
                 Intake.setPower(-1);
             }
             else {
                 Intake.setPower(0);
             }
             //intake in
-            if(gamepad2.dpad_right){
+            if(gamepad1.dpad_right){
                 Intake.setPower(1);
             }
             else {
