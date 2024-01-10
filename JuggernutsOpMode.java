@@ -22,10 +22,10 @@ public class JuggernutsOpMode extends LinearOpMode {
     public DcMotorEx bottomRight;
     public DcMotorEx liftOne;
     public DcMotorEx liftTwo;
-    public DcMotorEx PlaneLauncher;
-    public DcMotorEx Intake;
-    public Servo Servo0;
-    public Servo Servo1;
+    public DcMotorEx IntakeTilt;
+    public DcMotorEx liftTilt;
+    public Servo LGrab;
+    public Servo RGrab;
     boolean canMoveUp;
     boolean canMoveDown;
 
@@ -38,15 +38,17 @@ public class JuggernutsOpMode extends LinearOpMode {
         bottomRight = hardwareMap.get(DcMotorEx.class, "bottomRight");
         liftOne = hardwareMap.get(DcMotorEx.class, "liftOne");
         liftTwo = hardwareMap.get(DcMotorEx.class, "liftTwo");
-        PlaneLauncher = hardwareMap.get(DcMotorEx.class, "PlaneLauncher");
-        Intake = hardwareMap.get(DcMotorEx.class, "Intake");
-        Servo0 = hardwareMap.get(CRServo.class, "Servo0");
+        IntakeTilt = hardwareMap.get(DcMotorEx.class, "IntakeTilt");
+        liftTilt = hardwareMap.get(DcMotorEx.class, "liftTilt");
+        LGrab = hardwareMap.get(Servo.class, "LGrab");
+        RGrab = hardwareMap.get(Servo.class, "RGrab");
+
         topRight.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
         telemetry.addData("Hardware", "initialized");
         telemetry.update();
         //done initializing
-
+        
         //waiting for start
         telemetry.addData("software", "Waiting for start");
         telemetry.update();
@@ -65,79 +67,58 @@ public class JuggernutsOpMode extends LinearOpMode {
         liftTwo.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         while(opModeIsActive()) {
-            double y = gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
-            double topLeftPower = ((y - -x) - rx);
-            double bottomLeftPower = ((-y + x) + rx);
-            double topRightPower = ((y + -x) + rx);
-            double bottomRightPower = ((-y - x) - rx);
+            //sticks
+            double LY1 = gamepad1.left_stick_y;
+            double LX1 = gamepad1.left_stick_x;
+            double RX1 = gamepad1.right_stick_x;
+            double RY1 = gamepad1.right_stick_y;
+            double LY2 = gamepad2.left_stick_y;
+            double LX2 = gamepad2.left_stick_x;
+            double RX2 = gamepad2.right_stick_x;
+            double RY2 = gamepad2.right_stick_y;
 
-            //drive
+            //varibles
+            double DSpeed = 1;
+            double LP = 0;
+            double LPDiff = 0.025;
+            
+            //functions
+            liftOne.setPower(LP+(LPDiff/2));
+            liftTwo.setPower(LP-(LPDiff/2));
+
+            //movement
+            double topLeftPower = ((LY1 - LX1) - RX1);
+            double bottomLeftPower = ((LY1 + LX1) - RX1);
+            double topRightPower = ((LY1 + LX1) + RX1);
+            double bottomRightPower = ((LY1 - LX1) + RX1);
             //boost
             if(gamepad1.left_bumper) {
-                topLeft.setPower(topLeftPower * 0.625);
-                bottomLeft.setPower(bottomLeftPower * 0.625);
-                topRight.setPower(topRightPower * 0.625);
-                bottomRight.setPower(bottomRightPower * 0.625);
+                topLeft.setPower(topLeft * DSpeed);
+                bottomLeft.setPower(bottomLeftPower * DSpeed);
+                topRight.setPower(topRightPower * DSpeed);
+                bottomRight.setPower(bottomRightPower * DSpeed);
             }
             //drive normal
             else if(!gamepad1.left_bumper) {
-                topLeft.setPower(topLeftPower * 0.25);
-                bottomLeft.setPower(bottomLeftPower * 0.25);
-                topRight.setPower(topRightPower * 0.25);
-                bottomRight.setPower(bottomRightPower * 0.25);
+                topLeft.setPower(topLeftPower * 0.5);
+                bottomLeft.setPower(bottomLeftPower * 0.5);
+                topRight.setPower(topRightPower * 0.5);
+                bottomRight.setPower(bottomRightPower * 0.5);
             }
-            //pully
-            //pully up
-            if(gamepad1.dpad_up) {
-                liftOne.setPower(1);
-                liftTwo.setPower(-0.975);
-            }
-            else if(gamepad1.dpad_up && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
-                liftOne.setPower(-1);
-                liftTwo.setPower(0.975);
-            }
-            else {
-                liftOne.setPower(0);
-                liftTwo.setPower(0);
-            }
-            //pully down
-            if(gamepad1.dpad_down) {
-                liftOne.setPower(-1);
-                liftTwo.setPower(1);
-            }
-            else if(gamepad1.dpad_down && liftOne.getCurrentPosition() < 0 && liftTwo.getCurrentPosition() > 0) {
-                liftOne.setPower(1);
-                liftTwo.setPower(-1);
-            }
-            else {
-                liftOne.setPower(0);
-                liftTwo.setPower(0);
-            }
-            //plane
-            if(gamepad1.right_bumper){
-                PlaneLauncher.setPower(1);
-            }
-            else {
-                PlaneLauncher.setPower(0);
-            }
-            //Intake
-            //intake out
-            if(gamepad1.dpad_left){
-                Intake.setPower(-1);
-            }
-            else {
-                Intake.setPower(0);
-            }
-            //intake in
-            if(gamepad1.dpad_right){
-                Intake.setPower(1);
-            }
-            else {
-                Intake.setPower(0);
-            }
+
+            //lift
+            LP  = LY2;
+            //tilt
+            IntakeTilt.setPower(LX2);
+            
             //contorls done
+
+            //motorout
+            telemetry.addData("topLeftPower", topLeftPower);
+            telemetry.addData("bottomLeftPower", bottomLeftPower);
+            telemetry.addData("topRightPower", topRightPower);
+            telemetry.addData("bottomRightPower", bottomRightPower);
+            telemetry.update();
         }
     }
 }
