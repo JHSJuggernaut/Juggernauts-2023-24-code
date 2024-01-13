@@ -22,7 +22,7 @@ public class JuggernutsOpMode extends LinearOpMode {
     public DcMotorEx bottomRight;
     public DcMotorEx liftOne;
     public DcMotorEx liftTwo;
-    public DcMotorEx IntakeTilt;
+    public DcMotorEx intakeTilt;
     public DcMotorEx liftTilt;
     public Servo LGrab;
     public Servo RGrab;
@@ -38,7 +38,7 @@ public class JuggernutsOpMode extends LinearOpMode {
         bottomRight = hardwareMap.get(DcMotorEx.class, "bottomRight");
         liftOne = hardwareMap.get(DcMotorEx.class, "liftOne");
         liftTwo = hardwareMap.get(DcMotorEx.class, "liftTwo");
-        IntakeTilt = hardwareMap.get(DcMotorEx.class, "IntakeTilt");
+        intakeTilt = hardwareMap.get(DcMotorEx.class, "intakeTilt");
         liftTilt = hardwareMap.get(DcMotorEx.class, "liftTilt");
         LGrab = hardwareMap.get(Servo.class, "LGrab");
         RGrab = hardwareMap.get(Servo.class, "RGrab");
@@ -48,6 +48,9 @@ public class JuggernutsOpMode extends LinearOpMode {
         telemetry.addData("Hardware", "initialized");
         telemetry.update();
         //done initializing
+        
+        LGrab.setPosition(1);
+        RGrab.setPosition(0);
         
         //waiting for start
         telemetry.addData("software", "Waiting for start");
@@ -79,12 +82,8 @@ public class JuggernutsOpMode extends LinearOpMode {
 
             //varibles
             double DSpeed = 1;
-            double LP = 0;
-            double LPDiff = 0.025;
-            
-            //functions
-            liftOne.setPower(LP+(LPDiff/2));
-            liftTwo.setPower(LP-(LPDiff/2));
+            double LPDiff = 0;
+            double intakeTiltSpeed = 0.5;
 
             //movement
             double topLeftPower = ((LY1 - LX1) - RX1);
@@ -93,31 +92,43 @@ public class JuggernutsOpMode extends LinearOpMode {
             double bottomRightPower = ((LY1 - LX1) + RX1);
             //boost
             if(gamepad1.left_bumper) {
-                topLeft.setPower(topLeft * DSpeed);
+                topLeft.setPower(topLeftPower * DSpeed);
                 bottomLeft.setPower(bottomLeftPower * DSpeed);
                 topRight.setPower(topRightPower * DSpeed);
                 bottomRight.setPower(bottomRightPower * DSpeed);
             }
             //drive normal
             else if(!gamepad1.left_bumper) {
-                topLeft.setPower(topLeftPower * 0.5);
-                bottomLeft.setPower(bottomLeftPower * 0.5);
-                topRight.setPower(topRightPower * 0.5);
-                bottomRight.setPower(bottomRightPower * 0.5);
+                topLeft.setPower(topLeftPower * 0.25);
+                bottomLeft.setPower(bottomLeftPower * 0.25);
+                topRight.setPower(topRightPower * 0.25);
+                bottomRight.setPower(bottomRightPower * 0.25);
             }
 
             //lift
-            LP  = LY2;
+            liftOne.setPower(LY2+(LPDiff/2));
+            liftTwo.setPower(-LY2-(LPDiff/2));
             //tilt
-            IntakeTilt.setPower(LX2);
-            
-            //contorls done
+            liftTilt.setPower(RY2);
+            //intaketilt
+            intakeTilt.setPower(RX2 * intakeTiltSpeed);
+            //intake
+            if(gamepad2.dpad_down) {
+                LGrab.setPosition(1);
+                RGrab.setPosition(0);
+            }
+            else if(gamepad2.dpad_up) {
+                LGrab.setPosition(0);
+                RGrab.setPosition(1);
+            }
 
             //motorout
             telemetry.addData("topLeftPower", topLeftPower);
             telemetry.addData("bottomLeftPower", bottomLeftPower);
             telemetry.addData("topRightPower", topRightPower);
             telemetry.addData("bottomRightPower", bottomRightPower);
+            telemetry.addData("liftOnePower", LY2+(LPDiff/2));
+            telemetry.addData("liftTwoPower", LY2-(LPDiff/2));
             telemetry.update();
         }
     }
