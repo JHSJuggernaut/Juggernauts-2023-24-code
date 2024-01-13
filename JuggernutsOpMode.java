@@ -84,17 +84,20 @@ public class JuggernutsOpMode extends LinearOpMode {
             double liftOnePos = liftOne.getCurrentPosition();
             double liftTwoPos = liftTwo.getCurrentPosition();
             double liftTiltPos = liftTilt.getCurrentPosition();
-            double topLeft = topLeft.getCurrentPosition();
-            double topRight = topRight.getCurrentPosition();
-            double bottomLeft = bottomLeft.getCurrentPosition();
-            double bottomRight = bottomRight.getCurrentPosition();
-            double joystickDeadzone = 0.1;
+            double intakeTiltPos = intakeTilt.getCurrentPosition();
+            double topLeftPos = topLeft.getCurrentPosition();
+            double topRightPos = topRight.getCurrentPosition();
+            double bottomLeftPos = bottomLeft.getCurrentPosition();
+            double bottomRightPos = bottomRight.getCurrentPosition();
             
 
             //varibles
             double DSpeed = 1;
             double LPDiff = 0;
-            double intakeTiltSpeed = 0.5;
+            double intakeTiltSpeed = 0.25;
+            double joystickDeadzone = 0.1;
+            
+            //functions
             if (Math.abs(RX2) < joystickDeadzone) {
                 RX2 = 0.001;
             }
