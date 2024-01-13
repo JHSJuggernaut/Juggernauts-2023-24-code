@@ -79,11 +79,25 @@ public class JuggernutsOpMode extends LinearOpMode {
             double LX2 = gamepad2.left_stick_x;
             double RX2 = gamepad2.right_stick_x;
             double RY2 = gamepad2.right_stick_y;
+            double LGrabPos = LGrab.getPosition();
+            double RGrabPos = RGrab.getPosition();
+            double liftOnePos = liftOne.getCurrentPosition();
+            double liftTwoPos = liftTwo.getCurrentPosition();
+            double liftTiltPos = liftTilt.getCurrentPosition();
+            double topLeft = topLeft.getCurrentPosition();
+            double topRight = topRight.getCurrentPosition();
+            double bottomLeft = bottomLeft.getCurrentPosition();
+            double bottomRight = bottomRight.getCurrentPosition();
+            double joystickDeadzone = 0.1;
+            
 
             //varibles
             double DSpeed = 1;
             double LPDiff = 0;
             double intakeTiltSpeed = 0.5;
+            if (Math.abs(RX2) < joystickDeadzone) {
+                RX2 = 0.001;
+            }
 
             //movement
             double topLeftPower = ((LY1 - LX1) - RX1);
@@ -104,7 +118,7 @@ public class JuggernutsOpMode extends LinearOpMode {
                 topRight.setPower(topRightPower * 0.25);
                 bottomRight.setPower(bottomRightPower * 0.25);
             }
-
+            
             //lift
             liftOne.setPower(LY2+(LPDiff/2));
             liftTwo.setPower(-LY2-(LPDiff/2));
@@ -124,11 +138,18 @@ public class JuggernutsOpMode extends LinearOpMode {
 
             //motorout
             telemetry.addData("topLeftPower", topLeftPower);
-            telemetry.addData("bottomLeftPower", bottomLeftPower);
+            telemetry.addData("topLeftPos", topLeftPos);
             telemetry.addData("topRightPower", topRightPower);
+            telemetry.addData("topRightPos", topRightPos);
+            telemetry.addData("bottomLeftPower", bottomLeftPower);
+            telemetry.addData("bottomLeftPos", bottomLeftPos);
             telemetry.addData("bottomRightPower", bottomRightPower);
+            telemetry.addData("bottomRightPos", bottomRightPos);
             telemetry.addData("liftOnePower", LY2+(LPDiff/2));
+            telemetry.addData("liftOnePos", liftOnePos);
             telemetry.addData("liftTwoPower", LY2-(LPDiff/2));
+            telemetry.addData("liftTwoPos", liftTwoPos);
+            telemetry.addData("intakeTiltPos", intakeTiltPos);
             telemetry.update();
         }
     }
