@@ -45,6 +45,7 @@ public class JuggernutsOpMode extends LinearOpMode {
 
         topRight.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeTilt.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         telemetry.addData("Hardware", "initialized");
         telemetry.update();
         //done initializing
@@ -93,14 +94,10 @@ public class JuggernutsOpMode extends LinearOpMode {
 
             //varibles
             double DSpeed = 1;
-            double LPDiff = 0;
-            double intakeTiltSpeed = 0.25;
+            double intakeTiltSpeed = 0.5;
             double joystickDeadzone = 0.1;
             
             //functions
-            if (Math.abs(RX2) < joystickDeadzone) {
-                RX2 = 0.001;
-            }
 
             //movement
             double topLeftPower = ((LY1 - LX1) - RX1);
@@ -116,15 +113,21 @@ public class JuggernutsOpMode extends LinearOpMode {
             }
             //drive normal
             else if(!gamepad1.left_bumper) {
-                topLeft.setPower(topLeftPower * 0.25);
-                bottomLeft.setPower(bottomLeftPower * 0.25);
-                topRight.setPower(topRightPower * 0.25);
-                bottomRight.setPower(bottomRightPower * 0.25);
+                topLeft.setPower(topLeftPower * 0.5);
+                bottomLeft.setPower(bottomLeftPower * 0.5);
+                topRight.setPower(topRightPower * 0.5);
+                bottomRight.setPower(bottomRightPower * 0.5);
             }
             
             //lift
-            liftOne.setPower(LY2+(LPDiff/2));
-            liftTwo.setPower(-LY2-(LPDiff/2));
+            if (LY2 != 0) {
+                liftOne.setPower(LY2);
+                liftTwo.setPower(-LY2);
+            }
+            else {
+                liftOne.setPower(0);
+                liftTwo.setPower(0);
+            }
             //tilt
             liftTilt.setPower(RY2);
             //intaketilt
@@ -138,7 +141,6 @@ public class JuggernutsOpMode extends LinearOpMode {
                 LGrab.setPosition(0);
                 RGrab.setPosition(1);
             }
-
             //motorout
             telemetry.addData("topLeftPower", topLeftPower);
             telemetry.addData("topLeftPos", topLeftPos);
@@ -148,9 +150,9 @@ public class JuggernutsOpMode extends LinearOpMode {
             telemetry.addData("bottomLeftPos", bottomLeftPos);
             telemetry.addData("bottomRightPower", bottomRightPower);
             telemetry.addData("bottomRightPos", bottomRightPos);
-            telemetry.addData("liftOnePower", LY2+(LPDiff/2));
+            telemetry.addData("liftOnePower", LY2);
             telemetry.addData("liftOnePos", liftOnePos);
-            telemetry.addData("liftTwoPower", LY2-(LPDiff/2));
+            telemetry.addData("liftTwoPower", LY2);
             telemetry.addData("liftTwoPos", liftTwoPos);
             telemetry.addData("intakeTiltPos", intakeTiltPos);
             telemetry.update();
