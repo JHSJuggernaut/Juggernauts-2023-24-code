@@ -74,12 +74,16 @@ public class JuggernutsOpMode extends LinearOpMode {
             //sticks
             double LY1 = gamepad1.left_stick_y;
             double LX1 = gamepad1.left_stick_x;
+            double LT1 = gamepad1.left_trigger;
             double RX1 = gamepad1.right_stick_x;
             double RY1 = gamepad1.right_stick_y;
+            double RT1 = gamepad1.right_trigger;
             double LY2 = gamepad2.left_stick_y;
             double LX2 = gamepad2.left_stick_x;
+            double LT2 = gamepad2.left_trigger;
             double RX2 = gamepad2.right_stick_x;
             double RY2 = gamepad2.right_stick_y;
+            double RT2 = gamepad2.right_trigger;
             double LGrabPos = LGrab.getPosition();
             double RGrabPos = RGrab.getPosition();
             double liftOnePos = liftOne.getCurrentPosition();
@@ -94,9 +98,9 @@ public class JuggernutsOpMode extends LinearOpMode {
 
             //varibles
             double DSpeed = 1;
-            double intakeTiltSpeed = 0.5;
             double joystickDeadzone = 0.1;
             double liftSpeed = 0.75;
+            double intakeTiltSpeed = 0.5;
             
             //functions
 
@@ -136,14 +140,26 @@ public class JuggernutsOpMode extends LinearOpMode {
             //tilt
             liftTilt.setPower(RY2);
             //intaketilt
-            intakeTilt.setPower(RX2 * intakeTiltSpeed);
+            if (gamepad2.dpad_left) {
+                intakeTilt.setPower(intakeTiltSpeed);
+            }
+            else if (gamepad2.dpad_right) {
+                intakeTilt.setPower(-intakeTiltSpeed);
+            }
+            else {
+                intakeTilt.setPower(0);
+            }
             //intake
-            if(gamepad2.dpad_left) {
+            if (LT2 > 0.75){
                 LGrab.setPosition(1);
+            }
+            else if (gamepad2.left_bumper) {
+                LGrab.setPosition(0);
+            }
+            if (RT2 > 0.75){
                 RGrab.setPosition(0);
             }
-            else if(gamepad2.dpad_right) {
-                LGrab.setPosition(0);
+            else if (gamepad2.right_bumper) {
                 RGrab.setPosition(1);
             }
             //motorout
