@@ -50,8 +50,8 @@ public class JuggernutsOpMode extends LinearOpMode {
         telemetry.update();
         //done initializing
         
-        LGrab.setPosition(1);
-        RGrab.setPosition(0);
+        LGrab.setPosition(0);
+        RGrab.setPosition(1);
         
         //waiting for start
         telemetry.addData("software", "Waiting for start");
