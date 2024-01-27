@@ -122,12 +122,12 @@ public class JuggernutsOpMode extends LinearOpMode {
             
             //lift
             if (gamepad2.dpad_up) {
-                liftOne.setPower(liftSpeed);
-                liftTwo.setPower(-liftSpeed);
-            }
-            else if (gamepad2.dpad_down) {
                 liftOne.setPower(-liftSpeed);
                 liftTwo.setPower(liftSpeed);
+            }
+            else if (gamepad2.dpad_down) {
+                liftOne.setPower(liftSpeed);
+                liftTwo.setPower(-liftSpeed);
             }
             else {
                 liftOne.setPower(0);
