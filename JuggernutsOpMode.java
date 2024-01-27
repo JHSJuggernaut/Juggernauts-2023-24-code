@@ -96,6 +96,7 @@ public class JuggernutsOpMode extends LinearOpMode {
             double DSpeed = 1;
             double intakeTiltSpeed = 0.5;
             double joystickDeadzone = 0.1;
+            double liftSpeed = 0.75;
             
             //functions
 
@@ -120,9 +121,13 @@ public class JuggernutsOpMode extends LinearOpMode {
             }
             
             //lift
-            if (LY2 != 0) {
-                liftOne.setPower(LY2);
-                liftTwo.setPower(-LY2);
+            if (gamepad2.dpad_up) {
+                liftOne.setPower(liftSpeed);
+                liftTwo.setPower(-liftSpeed);
+            }
+            else if (gamepad2.dpad_down) {
+                liftOne.setPower(-liftSpeed);
+                liftTwo.setPower(liftSpeed);
             }
             else {
                 liftOne.setPower(0);
@@ -133,11 +138,11 @@ public class JuggernutsOpMode extends LinearOpMode {
             //intaketilt
             intakeTilt.setPower(RX2 * intakeTiltSpeed);
             //intake
-            if(gamepad2.dpad_down) {
+            if(gamepad2.dpad_left) {
                 LGrab.setPosition(1);
                 RGrab.setPosition(0);
             }
-            else if(gamepad2.dpad_up) {
+            else if(gamepad2.dpad_right) {
                 LGrab.setPosition(0);
                 RGrab.setPosition(1);
             }
