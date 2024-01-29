@@ -61,8 +61,8 @@ public class JuggernutsAuto extends LinearOpMode {
         liftTilt.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         
         //start possion
-        LGrab.setPosition(0);
-        RGrab.setPosition(1);
+        LGrab.setPosition(1);
+        RGrab.setPosition(0);
 
         //possions
         double LGrabPos = LGrab.getPosition();
